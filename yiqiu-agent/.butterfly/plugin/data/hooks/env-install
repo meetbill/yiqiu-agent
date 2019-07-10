@@ -1,0 +1,18 @@
+#!/bin/bash
+
+echo ${YIQIU_UNIT_HOME}
+# check unit hooks environment variables
+function check_unit_env() {
+    if [[ -z "$YIQIU_PROGRAM_HOME" ]]; then
+        return 1
+    fi
+    if [[ -z "$YIQIU_UNIT_HOME" ]]; then
+        return 1
+    fi
+    return 0
+}
+
+check_unit_env
+
+mkdir ${YIQIU_UNIT_HOME}/bin
+cp ${YIQIU_PROGRAM_HOME}/build/run.sh ${YIQIU_UNIT_HOME}/bin

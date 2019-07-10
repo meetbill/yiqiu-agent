@@ -1,0 +1,19 @@
+version: 0.0
+os: linux
+files:
+  - source: /index.html
+    destination: /var/www/html/
+hooks:
+  BeforeInstall:
+    - location: hooks/env-install
+      timeout: 300
+      runas: root
+  ApplicationStart:
+    - location: hooks/start_server
+      timeout: 300
+      runas: root
+  ApplicationStop:
+    - location: hooks/stop_server
+      timeout: 300
+      runas: root
+

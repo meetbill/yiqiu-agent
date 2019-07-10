@@ -1,0 +1,20 @@
+#!/bin/bash
+# check unit hooks environment variables
+function check_unit_env() {
+    if [[ -z "$YIQIU_PROGRAM_HOME" ]]; then
+        return 1
+    fi
+    if [[ -z "$YIQIU_UNIT_HOME" ]]; then
+        return 1
+    fi
+    return 0
+}
+
+check_unit_env
+
+if [[ -f $YIQIU_UNIT_HOME/bin/run.sh  ]];then
+    bash $YIQIU_UNIT_HOME/bin/run.sh stop
+else
+    echo "not found $YIQIU_UNIT_HOME/bin/run.sh ;not exe stop"
+fi
+
