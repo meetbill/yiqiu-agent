@@ -53,13 +53,9 @@ def app(req, log_id, appinfo):
     """
     isinstance(req, Request)
     if not _check_appinfo(appinfo):
-        return retstat.ERR_BAD_PARAMS, {
-            "log_id": log_id, "errinfo": "ERR_BAD_PARAMS"}, [(__info__, __version__)]
+        return retstat.ERR_BAD_PARAMS, {"log_id": log_id, "errinfo": "ERR_BAD_PARAMS"}, [(__info__, __version__)]
     req.log_params["exe_path"] = exe_path
-    exe_commend = easyrun.run_capture(
-        "python ./plugin/cli.py %s" %
-        appinfo["action"])
+    exe_commend = easyrun.run_capture("python ./plugin/cli.py %s" % appinfo["action"])
     if not exe_commend.success:
-        return retstat.ERR, {"log_id": log_id, "errinfo": exe_commend.output}, [
-            (__info__, __version__)]
+        return retstat.ERR, {"log_id": log_id, "errinfo": exe_commend.output}, [(__info__, __version__)]
     return retstat.OK, {"log_id": log_id}, [(__info__, __version__)]

@@ -1,13 +1,23 @@
 # yiqiu-agent
-## 原则
+
+<div align=center><img src="https://github.com/meetbill/yiqiu-agent/blob/master/images/yiqiu-logo.png" width="350"/></div>
+
+<!-- vim-markdown-toc GFM -->
+
+* [1 原则](#1-原则)
+* [2 使用手册](#2-使用手册)
+* [3 参加步骤](#3-参加步骤)
+
+<!-- vim-markdown-toc -->
+## 1 原则
 
 you build it，you run it
 
-## 使用手册
+## 2 使用手册
 
 [使用手册](https://github.com/meetbill/yiqiu-agent/wiki)
 
-## 参加步骤
+## 3 参加步骤
 
 * 在 GitHub 上 `fork` 到自己的仓库，然后 `clone` 到本地，并设置用户信息。
 ```

@@ -1,56 +1,27 @@
 # coding:utf8
 
 from xlib import httpgateway
-from xlib import protocol_json
-from xlib import retstat
-
-import api
 
 from conf import logger_conf
-import inspect
-import upload
+from conf import config
+from xlib import urls
 
-apicube = {}
-
-
-def addapi(name, func, is_parse_post, is_encode_response):
-    """注册函数
-    Args:
-        name: 函数的注册名，默认为包中函数的全小写方法名
-        func：函数
-        is_parse_post: 是否支持 post 请求
-        is_encode_response: 是否 encode 为 utf8
-    """
-    apicube[name] = protocol_json.Protocol(func, retstat.ERR_SERVER_EXCEPTION, retstat.ERR_BAD_PARAMS,
-                                           is_parse_post, is_encode_response, logger_conf.errlog)
-
-
-def add_apis(module, api_adder, adder_args):
-    for func_name, func in module.__dict__.iteritems():
-        if func_name.startswith("_"):
-            continue
-        if not inspect.isfunction(func):
-            continue
-        args_count = func.func_code.co_argcount
-        if args_count < 1:
-            continue
-        args = func.func_code.co_varnames
-        if args[0] != "req":
-            continue
-        print func_name
-        api_adder(func_name.lower(), func, *adder_args)
-
-# 将 apidemo module 中的函数进行注册
-add_apis(api, addapi, [True, True])
-#addapi("ping", api.ping, True, True)
-addapi("put", upload.put, False, True)
+route = urls.Route(logger_conf.infolog, logger_conf.errlog)
+# 自动将 handlers 目录加 package 自动注册
+route.autoload_handler("handlers")
+# 手动添加注册(访问 /ping ,则会自动转到 apidemo.ping)
+# route.addapi("/ping", apidemo.ping, True, True)
+apicube = route.get_route()
 
 # 用于处理 application 中 environ
 wsgigw = httpgateway.WSGIGateway(
     httpgateway.get_func_name,
     logger_conf.errlog,
     logger_conf.acclog,
-    apicube)
+    apicube,
+    config.STATIC_PATH,
+    config.STATIC_PREFIX
+)
 
 
 def application(environ, start_response):
@@ -59,9 +30,7 @@ def application(environ, start_response):
         start_response(status, headders)
         return content
     except BaseException:
-        start_response(
-            "500 Internal Server Error", [
-                ("GateWayError", "UnknownException")])
+        start_response("500 Internal Server Error", [("GateWayError", "UnknownException")])
         return ()
 
 
